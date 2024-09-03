@@ -1,6 +1,6 @@
 id: welcome-page-plugin
 name: Welcome Page Reearth Plugin
-version: 2.0.0
+version: 1.0.0
 extensions:
   - id: welcome
     type: widget
