@@ -1,8 +1,11 @@
 export function postMsg(action: string, payload?: unknown) {
-  globalThis.parent.postMessage({
-    action,
-    payload,
-  });
+  globalThis.parent.postMessage(
+    {
+      action,
+      payload,
+    },
+    "*"
+  );
 }
 
 export function hexToHSL(hex: string | undefined) {

@@ -1,70 +1,33 @@
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import { useLayoutEffect, useState } from "react";
 
-import { MouseEvent } from "@/shared/reearthTypes";
-import { hexToHSL, postMsg } from "@/shared/utils";
+import { postMsg } from "@/shared/utils";
 
 export default () => {
-  const inited = useRef(false);
+  const [ready, setReady] = useState(false);
 
   useLayoutEffect(() => {
-    if (!inited.current) {
-      const { primaryColor } =
-        (
-          window as Window & {
-            _reearth_plugin_extension_init_data_?: {
-              primaryColor?: string;
-            };
-          }
-        )._reearth_plugin_extension_init_data_ ?? {};
+    window.onmessage = (e) => {
+      if (e.data.action === "viewportSize") {
+        const { width, height } = e.data.payload;
+        const panelWidth = width / 2;
+        const panelHeight = height / 2;
+        const htmlElement = document.documentElement;
+        htmlElement.style.width = `${panelWidth}px`;
+        htmlElement.style.height = `${panelHeight}px`;
 
-      if (primaryColor) {
-        const hslColor = hexToHSL(primaryColor);
-        if (hslColor) {
-          document.documentElement.style.setProperty("--primary", hslColor);
-        }
+        const bodyElement = document.body;
+        bodyElement.style.width = `${panelWidth}px`;
+        bodyElement.style.height = `${panelHeight}px`;
+        setReady(true);
       }
-      inited.current = true;
-    }
+    };
   }, []);
 
-  const handleFlyToTokyo = useCallback(() => {
-    postMsg("flyToTokyo");
+  useLayoutEffect(() => {
+    postMsg("getViewportSize");
   }, []);
-
-  const [mouseLocation, setMouseLocation] = useState<{
-    lat: number | undefined;
-    lng: number | undefined;
-    height: number | undefined;
-  }>({
-    lng: 0,
-    lat: 0,
-    height: 0,
-  });
-
-  const handleMouseMove = useCallback((e: MouseEvent) => {
-    setMouseLocation({
-      lng: e.lng,
-      lat: e.lat,
-      height: e.height,
-    });
-  }, []);
-
-  useEffect(() => {
-    return window.addEventListener("message", (e) => {
-      if (e.data.action === "mouseMove") {
-        handleMouseMove(e.data.payload);
-      }
-    });
-  }, [handleMouseMove]);
 
   return {
-    mouseLocation,
-    handleFlyToTokyo,
+    ready,
   };
 };

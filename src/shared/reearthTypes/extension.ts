@@ -65,7 +65,8 @@ export declare type PluginExtensionInstance = {
 };
 
 export declare type ExtensionEventType = {
-  message: [message: unknown];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  message: [message: any];
   extensionMessage: [props: ExtensionMessage];
 };
 

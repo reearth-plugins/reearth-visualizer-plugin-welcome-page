@@ -51,10 +51,10 @@ extensions:
                   label: Image
                 - key: video_type
                   label: Video
-                availableIf:
-                  field: page_type
-                  type: string
-                  value: welcome_page
+              availableIf:
+                field: page_type
+                type: string
+                value: welcome_page
             - id: media_url
               type: url
               ui: image
@@ -63,10 +63,6 @@ extensions:
                 field: media_type
                 type: string
                 value: image_type
-              availableIf:
-                field: page_type
-                type: string
-                value: welcome_page
             - id: video_url
               type: url
               ui: video
@@ -75,10 +71,6 @@ extensions:
                 field: media_type
                 type: string
                 value: video_type
-              availableIf:
-                field: page_type
-                type: string
-                value: welcome_page
             - id: thumbnail_video_url
               type: url
               ui: image
