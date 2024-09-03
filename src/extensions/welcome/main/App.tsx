@@ -30,7 +30,7 @@ function App() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Hello world</CardTitle>
+        <CardTitle>Welcome </CardTitle>
         <CardDescription>
           Lipsum dolor sit amet, consectetur adipiscing elit
         </CardDescription>
