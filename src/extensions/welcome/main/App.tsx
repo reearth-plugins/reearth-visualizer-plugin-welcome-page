@@ -1,12 +1,12 @@
+import Welcome from "./components/Welcome";
 import useHooks from "./hooks";
 
 function App() {
-  const { ready } = useHooks();
+  const { ready, data } = useHooks();
+  // console.log("data",data);
 
-  // Ref
-  // https://ui.shadcn.com/blocks
-  return ready ? (
-    <div className="absolute w-full h-full bg-white rounded-lg">Content</div>
+    return ready ? (
+    <div className="absolute w-full h-full bg-white rounded-lg"><Welcome data={data} /></div>
   ) : null;
 }
 

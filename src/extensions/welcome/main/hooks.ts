@@ -2,13 +2,17 @@ import { useLayoutEffect, useState } from "react";
 
 import { postMsg } from "@/shared/utils";
 
+import { PageConfig } from "./components/Welcome";
+
 export default () => {
   const [ready, setReady] = useState(false);
+  const [data, setData] = useState<PageConfig[]>([]);
 
-  useLayoutEffect(() => {
+useLayoutEffect(() => {
     window.onmessage = (e) => {
       if (e.data.action === "viewportSize") {
-        const { width, height } = e.data.payload;
+        const { width, height, widgetData } = e.data.payload;
+        // console.log(width, height, widgetData);
         const panelWidth = width / 2;
         const panelHeight = height / 2;
         const htmlElement = document.documentElement;
@@ -19,6 +23,7 @@ export default () => {
         bodyElement.style.width = `${panelWidth}px`;
         bodyElement.style.height = `${panelHeight}px`;
         setReady(true);
+        setData(widgetData);
       }
     };
   }, []);
@@ -28,6 +33,6 @@ export default () => {
   }, []);
 
   return {
-    ready,
+    ready, data,
   };
 };
