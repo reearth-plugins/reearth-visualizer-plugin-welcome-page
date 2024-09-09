@@ -13,14 +13,24 @@ export type PageConfig = {
   agree_content?: string;
 };
 
-const Modal: React.FC<{ data: PageConfig[] }> = ({ data }) => {
-  console.log("data received", data);
+export type WidgetData = {
+  page_setting: PageConfig[];
+  appearance: {
+    primary_color?: string;
+    bg_color?: string;
+  };
+};
+
+const Modal: React.FC<{
+  data: WidgetData;
+}> = ({ data }) => {
+  const pages = data.page_setting ?? [];
   const [currentPage, setCurrentPage] = useState(0);
   const [isChecked, setIsChecked] = useState(false);
 
   const handleNext = () => {
-    if (currentPage < data.length - 1) {
-      console.log("current",currentPage);
+    if (currentPage < pages.length - 1) {
+      console.log("current", currentPage);
       setCurrentPage((prev) => prev + 1);
     }
   };
@@ -42,29 +52,14 @@ const Modal: React.FC<{ data: PageConfig[] }> = ({ data }) => {
   };
 
   const renderContent = () => {
-
-      if (!Array.isArray(data) || data.length === 0) {
+    if (!Array.isArray(pages) || pages.length === 0) {
       return <p>No content available</p>;
     }
-    const page = data[currentPage];
-    console.log("page",page);
+    const page = pages[currentPage];
 
     if (!page) return <p>Loading...</p>;
 
     switch (page.page_type) {
-      case "welcome_page":
-        return (
-          <>
-            <h2>{page.page_title}</h2>
-            <p>{page.page_description}</p>
-            {page.media_type === "image_type" && page.media_url ? (
-              <img src={page.media_url} alt="Media Content" />
-            ) : null}
-            {page.media_type === "video_type" && page.media_url ? (
-              <video src={page.media_url} controls />
-            ) : null}
-          </>
-        );
       case "md_page":
         return (
           <div>
@@ -79,19 +74,31 @@ const Modal: React.FC<{ data: PageConfig[] }> = ({ data }) => {
             <p>{page.agree_content}</p>
           </div>
         );
+      case "welcome_page":
       default:
-        return <p>Unknown Page Type</p>;
+        return (
+          <>
+            <h2>{page.page_title}</h2>
+            <p>{page.page_description}</p>
+            {page.media_type === "image_type" && page.media_url ? (
+              <img src={page.media_url} alt="Media Content" />
+            ) : null}
+            {page.media_type === "video_type" && page.media_url ? (
+              <video src={page.media_url} controls />
+            ) : null}
+          </>
+        );
     }
   };
 
   return (
-    <div className="absolute inset-0 bg-white p-4 rounded-lg shadow-lg">
+    <div className="absolute inset-0 p-4 bg-white rounded-lg shadow-lg">
       {renderContent()}
       <div className="flex justify-between mt-4">
         <Button disabled={currentPage === 0} onClick={handlePrev}>
           Prev
         </Button>
-        {currentPage === data.length - 1 ? (
+        {currentPage === pages.length - 1 ? (
           <>
             <Checkbox checked={isChecked} onChange={handleCheckboxChange}>
               Agree

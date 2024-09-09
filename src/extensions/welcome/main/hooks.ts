@@ -2,13 +2,13 @@ import { useLayoutEffect, useState } from "react";
 
 import { postMsg } from "@/shared/utils";
 
-import { PageConfig } from "./components/Welcome";
+import { WidgetData } from "./components/Welcome";
 
 export default () => {
   const [ready, setReady] = useState(false);
-  const [data, setData] = useState<PageConfig[]>([]);
+  const [data, setData] = useState<WidgetData>();
 
-useLayoutEffect(() => {
+  useLayoutEffect(() => {
     window.onmessage = (e) => {
       if (e.data.action === "viewportSize") {
         const { width, height, widgetData } = e.data.payload;
@@ -33,6 +33,7 @@ useLayoutEffect(() => {
   }, []);
 
   return {
-    ready, data,
+    ready,
+    data,
   };
 };

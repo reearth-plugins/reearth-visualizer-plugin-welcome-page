@@ -5,8 +5,10 @@ function App() {
   const { ready, data } = useHooks();
   // console.log("data",data);
 
-    return ready ? (
-    <div className="absolute w-full h-full bg-white rounded-lg"><Welcome data={data} /></div>
+  return ready && data ? (
+    <div className="absolute w-full h-full bg-white rounded-lg">
+      <Welcome data={data} />
+    </div>
   ) : null;
 }
 
