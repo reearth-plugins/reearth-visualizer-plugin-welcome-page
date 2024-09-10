@@ -7,7 +7,7 @@ function App() {
   // console.log("data",data);
 
   return ready && data ? (
-    <div className="absolute w-full h-full bg-white rounded-lg">
+    <div className="absolute w-full h-full bg-white rounded-lg shadow-lg">
       <Welcome data={data} />
     </div>
   ) : null;
