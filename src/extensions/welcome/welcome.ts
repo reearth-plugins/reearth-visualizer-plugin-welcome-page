@@ -19,6 +19,8 @@ reearth.extension.on(
           widgetData: reearth.extension.widget?.property,
         },
       });
+    } else if (msg.action === "closeModal") {
+      reearth.modal.close();
     }
   }
 );

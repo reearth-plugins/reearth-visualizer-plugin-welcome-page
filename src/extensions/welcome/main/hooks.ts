@@ -2,7 +2,7 @@ import { useLayoutEffect, useState } from "react";
 
 import { postMsg } from "@/shared/utils";
 
-import { WidgetData } from "./components/Welcome";
+import { WidgetData } from "../../../components/Welcome";
 
 export default () => {
   const [ready, setReady] = useState(false);
