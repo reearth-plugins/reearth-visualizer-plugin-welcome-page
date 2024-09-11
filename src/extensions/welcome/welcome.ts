@@ -10,7 +10,6 @@ reearth.extension.on(
   "message",
   (msg: { action: string; payload?: unknown }) => {
     if (msg.action === "getViewportSize") {
-      // console.log("sending viewport size and widget data");
       reearth.modal.postMessage({
         action: "viewportSize",
         payload: {

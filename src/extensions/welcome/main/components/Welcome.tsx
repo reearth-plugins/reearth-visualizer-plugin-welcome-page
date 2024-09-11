@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 
 import MyIcon from "@/assets/icon.svg";
+import LeftArrowIcon from "@/assets/leftArrow.svg";
+import RightArrowIcon from "@/assets/rightArrow.svg";
 import { Button } from "@/shared/components/ui/button";
 
 export type PageConfig = {
@@ -71,7 +73,6 @@ const Modal: React.FC<{ data: WidgetData }> = ({ data }) => {
       case "md_page":
         return (
           <div>
-            <h2>{page.page_title}</h2>
             <p>{page.md_content}</p>
           </div>
         );
@@ -157,9 +158,10 @@ const Modal: React.FC<{ data: WidgetData }> = ({ data }) => {
       <div className="flex items-center justify-between mt-4">
         <Button
           onClick={handlePrev}
-          className={`${currentPage === 0 ? "opacity-0 pointer-events-none" : ""} min-w-40`}
+          className={`${currentPage === 0 ? "opacity-0 pointer-events-none" : ""} min-w-40 flex justify-center items-center gap-2`}
         >
-          Prev
+            <img src={LeftArrowIcon} alt="Left Arrow" className="h-4" />
+        Prev
         </Button>
         <div className="flex items-center justify-center">
           {pages.map((_, index) => (
@@ -185,32 +187,19 @@ const Modal: React.FC<{ data: WidgetData }> = ({ data }) => {
           </Button>
         ) : (
           <Button
-            className="min-w-40"
+            className="min-w-40 flex justify-center items-center gap-2"
             disabled={
               currentPageData.page_type === "agreement_page" &&
               !isAgreementChecked
             }
             onClick={handleNext}
           >
-            Next
+        Next
+          <img src={RightArrowIcon} alt="Right Arrow" className="h-4" />
+
           </Button>
         )}
       </div>
-
-      {/* <div className="flex items-center justify-between mt-4">
-        {currentPage > 0 ? (
-          <Button onClick={handlePrev}>Prev</Button>
-        ) : (
-          <div /> // Placeholder for Prev button
-        )}
-        {currentPage === pages.length - 1 ? (
-          <Button disabled={!isAgreementChecked} onClick={handleStartToUse}>
-            Start to Use
-          </Button>
-        ) : (
-          <Button onClick={handleNext}>Next</Button>
-        )}
-      </div> */}
     </div>
   );
 };

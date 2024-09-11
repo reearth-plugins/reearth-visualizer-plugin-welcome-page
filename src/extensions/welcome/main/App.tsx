@@ -1,10 +1,8 @@
-import Welcome from "../../../components/Welcome";
-
+import Welcome from "./components/Welcome";
 import useHooks from "./hooks";
 
 function App() {
   const { ready, data } = useHooks();
-  // console.log("data",data);
 
   return ready && data ? (
     <div className="absolute w-full h-full bg-white rounded-lg shadow-lg">
