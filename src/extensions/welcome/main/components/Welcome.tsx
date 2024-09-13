@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import MyIcon from "@/assets/icon.svg";
 import LeftArrowIcon from "@/assets/leftArrow.svg";
 import RightArrowIcon from "@/assets/rightArrow.svg";
 import { Button } from "@/shared/components/ui/button";
+import { hexToHSL, postMsg } from "@/shared/utils";
 
 export type PageConfig = {
   page_type: string;
@@ -26,9 +27,21 @@ export type WidgetData = {
 
 const Modal: React.FC<{ data: WidgetData }> = ({ data }) => {
   const pages = data.page_setting ?? [];
+  console.log(data.appearance);
+  const primaryColor = data.appearance?.primary_color ?? "#0085BE";
   const [currentPage, setCurrentPage] = useState(0);
   const [isWelcomeChecked, setIsWelcomeChecked] = useState(false);
   const [isAgreementChecked, setIsAgreementChecked] = useState(false);
+
+  // TODO: change the primary color
+  useEffect(() => {
+    if (primaryColor) {
+      const hslColor = hexToHSL(primaryColor);
+      if (hslColor) {
+        document.documentElement.style.setProperty("--primary", hslColor);
+      }
+    }
+  }, [primaryColor]);
 
   const currentPageData = pages[currentPage];
 
@@ -48,6 +61,8 @@ const Modal: React.FC<{ data: WidgetData }> = ({ data }) => {
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     setIsWelcomeChecked(e.target.checked);
+    // post to extension
+    postMsg("dontShowThisAgain", e.target.checked);
   };
 
   const handleAgreementCheckboxChange = (
@@ -57,9 +72,7 @@ const Modal: React.FC<{ data: WidgetData }> = ({ data }) => {
   };
 
   const handleStartToUse = () => {
-    if (isAgreementChecked) {
-      window.parent.postMessage({ action: "closeModal" }, "*");
-    }
+    window.parent.postMessage({ action: "closeModal" }, "*");
   };
 
   const renderContent = () => {
@@ -150,7 +163,7 @@ const Modal: React.FC<{ data: WidgetData }> = ({ data }) => {
       return <div className="absolute w-full h-full bg-gray-300" />;
     }
   };
-
+  console.log("primaryColor", primaryColor);
   return (
     <div className="absolute flex flex-col w-full h-full p-4 rounded-lg">
       <div className="flex flex-grow h-0 p-4">{renderContent()}</div>
@@ -160,16 +173,17 @@ const Modal: React.FC<{ data: WidgetData }> = ({ data }) => {
           onClick={handlePrev}
           className={`${currentPage === 0 ? "opacity-0 pointer-events-none" : ""} min-w-40 flex justify-center items-center gap-2`}
         >
-            <img src={LeftArrowIcon} alt="Left Arrow" className="h-4" />
-        Prev
+          <img src={LeftArrowIcon} alt="Left Arrow" className="h-4" />
+          Prev
         </Button>
         <div className="flex items-center justify-center">
           {pages.map((_, index) => (
             <div
               key={index}
-              className={`w-2 h-2 mx-1 rounded-full ${
-                index === currentPage ? "bg-blue-500" : "bg-gray-300"
-              }`}
+              className={`w-2 h-2 mx-1 rounded-full`}
+              style={{
+                backgroundColor: index === currentPage ? primaryColor : "#ccc",
+              }}
             />
           ))}
         </div>
@@ -194,9 +208,8 @@ const Modal: React.FC<{ data: WidgetData }> = ({ data }) => {
             }
             onClick={handleNext}
           >
-        Next
-          <img src={RightArrowIcon} alt="Right Arrow" className="h-4" />
-
+            Next
+            <img src={RightArrowIcon} alt="Right Arrow" className="h-4" />
           </Button>
         )}
       </div>

@@ -29,14 +29,14 @@ extensions:
                   label: Agreement Page
             - id: page_title
               type: string
-              title: Title
+              title: Welcome Page Title
               availableIf:
                 field: page_type
                 type: string
                 value: welcome_page
             - id: page_description
               type: string
-              title: Description
+              title: Welcome Page Description
               ui: multiline
               availableIf:
                 field: page_type
@@ -44,8 +44,7 @@ extensions:
                 value: welcome_page
             - id: media_type
               type: string
-              title: Media Type
-              defaultValue: image_type
+              title: Welcome Page Media Type
               choices:
                 - key: image_type
                   label: Image
@@ -58,7 +57,7 @@ extensions:
             - id: media_url
               type: url
               ui: image
-              title: Image
+              title: Welcome Page Media Image
               availableIf:
                 field: media_type
                 type: string
@@ -66,7 +65,7 @@ extensions:
             - id: video_url
               type: url
               ui: video
-              title: Video URL
+              title: Welcome Page Media Video
               availableIf:
                 field: media_type
                 type: string
@@ -74,14 +73,22 @@ extensions:
             - id: thumbnail_video_url
               type: url
               ui: image
-              title: Thumbnail Video URL
+              title: Welcome Page Media Video Thumbnail
               availableIf:
                 field: media_type
                 type: string
                 value: video_type
+            - id: tutorial_page_image_url
+              type: url
+              ui: image
+              title: Tutorial Page Image
+              availableIf:
+                field: page_type
+                type: string
+                value: tutorial_page
             - id: md_content
               type: string
-              title: MD Content
+              title: MD Page Content
               ui: multiline
               description: For markdown content
               availableIf:
