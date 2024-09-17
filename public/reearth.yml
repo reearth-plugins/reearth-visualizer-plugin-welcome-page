@@ -1,5 +1,5 @@
-id: welcome-page-plugin
-name: Welcome Page Reearth Plugin
+id: reearth-visualizer-plugin-welcome-page
+name: Visualizer Welcome Page Plugin
 version: 1.0.0
 extensions:
   - id: welcome
