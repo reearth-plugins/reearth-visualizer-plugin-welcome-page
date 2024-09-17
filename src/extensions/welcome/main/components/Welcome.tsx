@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 
-import MyIcon from "@/assets/icon.svg";
 import LeftArrowIcon from "@/assets/leftArrow.svg";
 import RightArrowIcon from "@/assets/rightArrow.svg";
 import { Button } from "@/shared/components/ui/button";
@@ -13,6 +12,7 @@ export type PageConfig = {
   media_type?: string;
   media_url?: string;
   video_url?: string;
+  tutorial_page_image_url?: string;
   md_content?: string;
   agree_content?: string;
 };
@@ -27,7 +27,7 @@ export type WidgetData = {
 
 const Modal: React.FC<{ data: WidgetData }> = ({ data }) => {
   const pages = data.page_setting ?? [];
-  console.log(data.appearance);
+  // console.log(data.appearance);
   const primaryColor = data.appearance?.primary_color ?? "#0085BE";
   const [currentPage, setCurrentPage] = useState(0);
   const [isWelcomeChecked, setIsWelcomeChecked] = useState(false);
@@ -91,11 +91,9 @@ const Modal: React.FC<{ data: WidgetData }> = ({ data }) => {
         );
       case "tutorial_page":
         return (
-          <div className="flex items-center justify-center">
-            <div className="w-full h-auto">
-              <img src={MyIcon} alt="My Icon" className="w-full h-auto" />
+            <div className="relative flex flex-grow justify-center w-full my-4">
+              {page.tutorial_page_image_url ? (<img src={page.tutorial_page_image_url} alt="Tutorial Image" className="w-full h-full"/>):(<div className="absolute w-full h-full bg-gray-100" />)}
             </div>
-          </div>
         );
       case "agreement_page":
         return (
@@ -153,7 +151,7 @@ const Modal: React.FC<{ data: WidgetData }> = ({ data }) => {
   const renderMediaContent = (
     type?: string,
     imageUrl?: string,
-    videoUrl?: string
+    videoUrl?: string,
   ) => {
     if (type === "image_type" && imageUrl) {
       return <img src={imageUrl} className="w-auto h-full" />;
@@ -202,10 +200,6 @@ const Modal: React.FC<{ data: WidgetData }> = ({ data }) => {
         ) : (
           <Button
             className="min-w-40 flex justify-center items-center gap-2"
-            disabled={
-              currentPageData.page_type === "agreement_page" &&
-              !isAgreementChecked
-            }
             onClick={handleNext}
           >
             Next
