@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import ReactMarkdown from "react-markdown";
+import 'github-markdown-css';
 
 import LeftArrowIcon from "@/assets/leftArrow.svg";
 import RightArrowIcon from "@/assets/rightArrow.svg";
@@ -75,24 +77,25 @@ const Modal: React.FC<{ data: WidgetData }> = ({ data }) => {
     window.parent.postMessage({ action: "closeModal" }, "*");
   };
 
-  const renderContent = () => {
-    if (!Array.isArray(pages) || pages.length === 0) {
-      return <p>No content available</p>;
-    }
-    const page = pages[currentPage];
-    if (!page) return <p>Loading...</p>;
+const renderContent = () => {
+  if (!Array.isArray(pages) || pages.length === 0) {
+    return <p>No content available</p>;
+  }
+  const page = pages[currentPage];
+  if (!page) return <p>Loading...</p>;
 
     switch (page.page_type) {
       case "md_page":
         return (
-          <div>
-            <p>{page.md_content}</p>
+          <div className="markdown-body w-full h-full overflow-y-auto"
+            >
+            <ReactMarkdown>{page.md_content}</ReactMarkdown>
           </div>
         );
       case "tutorial_page":
         return (
             <div className="relative flex flex-grow justify-center w-full my-4">
-              {page.tutorial_page_image_url ? (<img src={page.tutorial_page_image_url} alt="Tutorial Image" className="w-full h-full"/>):(<div className="absolute w-full h-full bg-gray-100" />)}
+              {page.tutorial_page_image_url ? (<img src={page.tutorial_page_image_url} alt="Tutorial Image" className="relative w-full h-full"/>):(<div className="absolute w-full h-full bg-gray-100" />)}
             </div>
         );
       case "agreement_page":
@@ -161,7 +164,6 @@ const Modal: React.FC<{ data: WidgetData }> = ({ data }) => {
       return <div className="absolute w-full h-full bg-gray-300" />;
     }
   };
-  console.log("primaryColor", primaryColor);
   return (
     <div className="absolute flex flex-col w-full h-full p-4 rounded-lg">
       <div className="flex flex-grow h-0 p-4">{renderContent()}</div>
