@@ -29,13 +29,11 @@ export type WidgetData = {
 
 const Modal: React.FC<{ data: WidgetData }> = ({ data }) => {
   const pages = data.page_setting ?? [];
-  // console.log(data.appearance);
   const primaryColor = data.appearance?.primary_color ?? "#0085BE";
   const [currentPage, setCurrentPage] = useState(0);
   const [isWelcomeChecked, setIsWelcomeChecked] = useState(false);
   const [isAgreementChecked, setIsAgreementChecked] = useState(false);
 
-  // TODO: change the primary color
   useEffect(() => {
     if (primaryColor) {
       const hslColor = hexToHSL(primaryColor);
@@ -63,8 +61,6 @@ const Modal: React.FC<{ data: WidgetData }> = ({ data }) => {
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     setIsWelcomeChecked(e.target.checked);
-    // post to extension
-    postMsg("dontShowThisAgain", e.target.checked);
   };
 
   const handleAgreementCheckboxChange = (
@@ -74,6 +70,7 @@ const Modal: React.FC<{ data: WidgetData }> = ({ data }) => {
   };
 
   const handleStartToUse = () => {
+    postMsg("dontShowThisAgain", isWelcomeChecked);
     window.parent.postMessage({ action: "closeModal" }, "*");
   };
 
@@ -95,7 +92,15 @@ const renderContent = () => {
       case "tutorial_page":
         return (
             <div className="relative flex flex-grow justify-center w-full my-4">
-              {page.tutorial_page_image_url ? (<img src={page.tutorial_page_image_url} alt="Tutorial Image" className="relative w-full h-full"/>):(<div className="absolute w-full h-full bg-gray-100" />)}
+              {page.tutorial_page_image_url ? (
+                <img
+                  src={page.tutorial_page_image_url}
+                  alt="Tutorial Image"
+                  className="relative w-full h-full"
+                />
+                  ):(
+                    <div className="absolute w-full h-full bg-gray-100" />
+                    )}
             </div>
         );
       case "agreement_page":
@@ -137,15 +142,6 @@ const renderContent = () => {
                 page.video_url
               )}
             </div>
-            <div className="flex items-center justify-center shrink-0">
-              <input
-                type="checkbox"
-                checked={isWelcomeChecked}
-                onChange={handleWelcomeCheckboxChange}
-                className="mr-2"
-              />
-              <span>Don't show this again.</span>
-            </div>
           </div>
         );
     }
@@ -166,7 +162,27 @@ const renderContent = () => {
   };
   return (
     <div className="absolute flex flex-col w-full h-full p-4 rounded-lg">
+      <div className="absolute top-4 right-4">
+      <button
+        onClick={() => window.parent.postMessage({ action: "closeModal" }, "*")}
+        className="text-gray-500 hover:text-gray-800"
+      >
+        ✕
+      </button>
+    </div>
       <div className="flex flex-grow h-0 p-4">{renderContent()}</div>
+
+      {currentPage === 0 && (
+    <div className="flex items-center justify-center shrink-0">
+      <input
+        type="checkbox"
+        checked={isWelcomeChecked}
+        onChange={handleWelcomeCheckboxChange}
+        className="mr-2"
+      />
+      <span>Don't show this again.</span>
+    </div>
+  )}
 
       <div className="flex items-center justify-between mt-4">
         <Button
@@ -203,6 +219,9 @@ const renderContent = () => {
           <Button
             className="min-w-40 flex justify-center items-center gap-2"
             onClick={handleNext}
+            disabled={
+    currentPageData.page_type === "agreement_page" && !isAgreementChecked
+  }
           >
             Next
             <img src={RightArrowIcon} alt="Right Arrow" className="h-4" />
