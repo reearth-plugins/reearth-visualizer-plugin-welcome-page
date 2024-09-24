@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
-import 'github-markdown-css';
+import "github-markdown-css/github-markdown-light.css";
 
 import LeftArrowIcon from "@/assets/leftArrow.svg";
 import RightArrowIcon from "@/assets/rightArrow.svg";
@@ -84,7 +84,7 @@ const renderContent = () => {
     switch (page.page_type) {
       case "md_page":
         return (
-          <div className="markdown-body w-full h-full overflow-y-auto"
+          <div className="markdown-body w-full h-full overflow-y-auto p-4"
             >
             <ReactMarkdown>{page.md_content}</ReactMarkdown>
           </div>
@@ -162,14 +162,6 @@ const renderContent = () => {
   };
   return (
     <div className="absolute flex flex-col w-full h-full p-4 rounded-lg">
-      <div className="absolute top-4 right-4">
-      <button
-        onClick={() => window.parent.postMessage({ action: "closeModal" }, "*")}
-        className="text-gray-500 hover:text-gray-800"
-      >
-        ✕
-      </button>
-    </div>
       <div className="flex flex-grow h-0 p-4">{renderContent()}</div>
 
       {currentPage === 0 && (
