@@ -2,15 +2,123 @@ id: reearth-visualizer-plugin-welcome-page
 name: Visualizer Welcome Page Plugin
 version: 1.0.0
 extensions:
-  - id: demo
+  - id: welcome
     type: widget
-    name: Demo
+    name: Welcome Page
+    singleOnly: true
     schema:
       groups:
+        - id: page_setting
+          title: Page
+          list: true
+          description: You may change the page setting here.
+          representativeField: page_type
+          fields:
+            - id: page_type
+              type: string
+              title: Page Type
+              defaultValue: welcome_page
+              choices:
+                - key: welcome_page
+                  label: Welcome Page
+                - key: md_page
+                  label: MD Content Page
+                - key: tutorial_page
+                  label: Tutorial Page
+                - key: agreement_page
+                  label: Agreement Page
+            - id: page_title
+              type: string
+              title: Welcome Page Title
+              availableIf:
+                field: page_type
+                type: string
+                value: welcome_page
+            - id: page_description
+              type: string
+              title: Welcome Page Description
+              ui: multiline
+              availableIf:
+                field: page_type
+                type: string
+                value: welcome_page
+            - id: media_type
+              type: string
+              title: Welcome Page Media Type
+              choices:
+                - key: image_type
+                  label: Image
+                - key: video_type
+                  label: Video
+              availableIf:
+                field: page_type
+                type: string
+                value: welcome_page
+            - id: media_url
+              type: url
+              ui: image
+              title: Welcome Page Media Image
+              availableIf:
+                field: media_type
+                type: string
+                value: image_type
+            - id: video_url
+              type: url
+              ui: video
+              title: Welcome Page Media Video
+              availableIf:
+                field: media_type
+                type: string
+                value: video_type
+            - id: thumbnail_video_url
+              type: url
+              ui: image
+              title: Welcome Page Media Video Thumbnail
+              availableIf:
+                field: media_type
+                type: string
+                value: video_type
+            - id: tutorial_page_image_url
+              type: url
+              ui: image
+              title: Tutorial Page Image
+              availableIf:
+                field: page_type
+                type: string
+                value: tutorial_page
+            - id: md_content
+              type: string
+              title: MD Page Content
+              ui: multiline
+              description: For markdown content
+              availableIf:
+                field: page_type
+                type: string
+                value: md_page
+            - id: agree_content
+              type: string
+              title: Agreement
+              ui: multiline
+              description: Markdown content for agreement page
+              availableIf:
+                field: page_type
+                type: string
+                value: agreement_page
         - id: appearance
           title: Appearance
           fields:
             - id: primary_color
-              title: Primary color
               type: string
+              title: Primary Color
               ui: color
+              defaultValue: "#0085BE"
+            - id: bg_color
+              type: string
+              title: Background Color
+              ui: color
+              defaultValue: "#000"
+    widgetLayout:
+      defaultLocation:
+        zone: inner
+        section: center
+        area: top

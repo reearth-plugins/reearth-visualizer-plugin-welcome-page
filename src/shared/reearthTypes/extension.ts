@@ -46,7 +46,8 @@ export declare type Widget = {
   readonly id: string;
   readonly pluginId?: string;
   readonly extensionId?: string;
-  readonly property?: unknown;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  readonly property?: any;
   readonly propertyId?: string;
   readonly extended?: {
     horizontally: boolean;
@@ -65,7 +66,8 @@ export declare type PluginExtensionInstance = {
 };
 
 export declare type ExtensionEventType = {
-  message: [message: unknown];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  message: [message: any];
   extensionMessage: [props: ExtensionMessage];
 };
 
