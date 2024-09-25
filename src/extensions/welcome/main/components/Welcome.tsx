@@ -176,7 +176,7 @@ const renderContent = () => {
     </div>
   )}
 
-      <div className="flex items-center justify-between mt-4">
+      <div className="flex items-center justify-between mt-4 px-4">
         <Button
           onClick={handlePrev}
           className={`${currentPage === 0 ? "opacity-0 pointer-events-none" : ""} min-w-40 flex justify-center items-center gap-2`}
