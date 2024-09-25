@@ -84,14 +84,14 @@ const renderContent = () => {
     switch (page.page_type) {
       case "md_page":
         return (
-          <div className="markdown-body w-full h-full overflow-y-auto p-4"
+          <div className="markdown-body flex flex-col w-full p-4"
             >
             <ReactMarkdown>{page.md_content}</ReactMarkdown>
           </div>
         );
       case "tutorial_page":
         return (
-            <div className="relative flex flex-grow justify-center w-full my-4">
+            <div className="relative flex flex-col w-full">
               {page.tutorial_page_image_url ? (
                 <img
                   src={page.tutorial_page_image_url}
@@ -99,19 +99,19 @@ const renderContent = () => {
                   className="relative w-full h-full"
                 />
                   ):(
-                    <div className="absolute w-full h-full bg-gray-100" />
+                    <div className="absolute w-full h-full bg-gray-200" />
                     )}
             </div>
         );
       case "agreement_page":
         return (
-          <div className="flex flex-col w-full gap-2">
+          <div className="flex flex-col w-full">
             {page.agree_content ? (
-              <div className="flex-grow p-4 overflow-y-auto bg-gray-300">
+              <div className="flex-grow p-4 overflow-y-auto bg-gray-200">
                 {page.agree_content}
               </div>
             ) : (
-              <div className="flex items-center justify-center flex-grow p-4 text-xl bg-gray-300">
+              <div className="flex items-center justify-center flex-grow p-4 text-xl bg-gray-200">
                 データを入力してからリロードしてページを表示してください。
               </div>
             )}
@@ -130,7 +130,7 @@ const renderContent = () => {
       case "welcome_page":
       default:
         return (
-          <div className="flex flex-col w-full gap-2">
+          <div className="flex flex-col w-full">
             <div className="text-2xl shrink-0">{page.page_title}</div>
             <p className="overflow-hidden shrink-0 whitespace-nowrap text-ellipsis">
               {page.page_description}
@@ -157,7 +157,7 @@ const renderContent = () => {
     } else if (type === "video_type" && videoUrl) {
       return <video src={videoUrl} controls className="w-auto h-full" />;
     } else {
-      return <div className="absolute w-full h-full bg-gray-300" />;
+      return <div className="absolute w-full h-full bg-gray-200" />;
     }
   };
   return (
