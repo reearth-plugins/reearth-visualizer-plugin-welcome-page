@@ -107,11 +107,11 @@ const renderContent = () => {
         return (
           <div className="flex flex-col w-full">
             {page.agree_content ? (
-              <div className="flex-grow p-4 overflow-y-auto bg-gray-200">
+              <div className="flex-grow p-4 overflow-y-auto">
                 {page.agree_content}
               </div>
             ) : (
-              <div className="flex items-center justify-center flex-grow p-4 text-xl bg-gray-200">
+              <div className="flex items-center justify-center flex-grow text-xl bg-gray-200">
                 データを入力してからリロードしてページを表示してください。
               </div>
             )}
