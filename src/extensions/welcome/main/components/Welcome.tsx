@@ -156,9 +156,9 @@ const renderContent = () => {
     videoUrl?: string,
   ) => {
     if (type === "image_type" && imageUrl) {
-      return <img src={imageUrl} className="w-auto h-full" />;
+      return <img src={imageUrl} className="w-full h-full" />;
     } else if (type === "video_type" && videoUrl) {
-      return <video src={videoUrl} controls className="w-auto h-full" />;
+      return <video src={videoUrl} controls className="w-full h-full" />;
     } else {
       return <div className="absolute w-full h-full bg-gray-200" />;
     }
