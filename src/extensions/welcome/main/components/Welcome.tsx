@@ -4,6 +4,7 @@ import "github-markdown-css/github-markdown-light.css";
 
 import LeftArrowIcon from "@/assets/leftArrow.svg";
 import RightArrowIcon from "@/assets/rightArrow.svg";
+import TutorialImage from "@/assets/tutorial_img.svg";
 import { Button } from "@/shared/components/ui/button";
 import { hexToHSL, postMsg } from "@/shared/utils";
 
@@ -84,7 +85,7 @@ const renderContent = () => {
     switch (page.page_type) {
       case "md_page":
         return (
-          <div className="markdown-body flex flex-col w-full p-4"
+          <div className="markdown-body flex flex-col overflow-y-auto w-full p-4 bg-gray-200"
             >
             <ReactMarkdown>{page.md_content}</ReactMarkdown>
           </div>
@@ -99,7 +100,9 @@ const renderContent = () => {
                   className="relative w-full h-full"
                 />
                   ):(
-                    <div className="absolute w-full h-full bg-gray-200" />
+                    <div className="absolute w-full h-full">
+                      <img src={TutorialImage} alt="default_tutorial_image" />
+                    </div>
                     )}
             </div>
         );
@@ -107,8 +110,8 @@ const renderContent = () => {
         return (
           <div className="flex flex-col w-full">
             {page.agree_content ? (
-              <div className="flex-grow p-4 overflow-y-auto">
-                {page.agree_content}
+              <div className="markdown-body flex-grow p-4 overflow-y-auto bg-gray-200">
+                <ReactMarkdown>{page.agree_content}</ReactMarkdown>
               </div>
             ) : (
               <div className="flex items-center justify-center flex-grow text-xl bg-gray-200">
