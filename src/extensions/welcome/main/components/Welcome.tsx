@@ -75,36 +75,35 @@ const Modal: React.FC<{ data: WidgetData }> = ({ data }) => {
     window.parent.postMessage({ action: "closeModal" }, "*");
   };
 
-const renderContent = () => {
-  if (!Array.isArray(pages) || pages.length === 0) {
-    return <p>No content available</p>;
-  }
-  const page = pages[currentPage];
-  if (!page) return <p>Loading...</p>;
+  const renderContent = () => {
+    if (!Array.isArray(pages) || pages.length === 0) {
+      return <p>No content available</p>;
+    }
+    const page = pages[currentPage];
+    if (!page) return <p>Loading...</p>;
 
     switch (page.page_type) {
       case "md_page":
         return (
-          <div className="markdown-body flex-grow p-4 overflow-y-auto"
-            >
+          <div className="markdown-body flex-grow p-4 overflow-y-auto">
             <ReactMarkdown>{page.md_content}</ReactMarkdown>
           </div>
         );
       case "tutorial_page":
         return (
-            <div className="relative flex flex-col w-full">
-              {page.tutorial_page_image_url ? (
-                <img
-                  src={page.tutorial_page_image_url}
-                  alt="Tutorial Image"
-                  className="relative w-full h-full"
-                />
-                  ):(
-                    <div className="absolute w-full h-full">
-                      <img src={TutorialImage} alt="default_tutorial_image" />
-                    </div>
-                    )}
-            </div>
+          <div className="relative flex flex-col w-full">
+            {page.tutorial_page_image_url ? (
+              <img
+                src={page.tutorial_page_image_url}
+                alt="Tutorial Image"
+                className="relative w-full h-full"
+              />
+            ) : (
+              <div className="absolute w-full h-full">
+                <img src={TutorialImage} alt="default_tutorial_image" />
+              </div>
+            )}
+          </div>
         );
       case "agreement_page":
         return (
@@ -143,7 +142,7 @@ const renderContent = () => {
   const renderMediaContent = (
     type?: string,
     imageUrl?: string,
-    videoUrl?: string,
+    videoUrl?: string
   ) => {
     if (type === "image_type" && imageUrl) {
       return <img src={imageUrl} className="w-full h-full" />;
@@ -157,29 +156,29 @@ const renderContent = () => {
     <div className="absolute flex flex-col w-full h-full p-4 rounded-lg">
       <div className="flex flex-grow h-0 p-4">{renderContent()}</div>
 
-  {currentPage === 0 ? (
-  <div className="flex items-center justify-center shrink-0 mt-4">
-    <input
-      type="checkbox"
-      checked={isWelcomeChecked}
-      onChange={handleWelcomeCheckboxChange}
-      className="mr-2"
-    />
-    <span>Don't show this again.</span>
-  </div>
-) : (
-  currentPageData.page_type === "agreement_page" && (
-    <div className="flex items-center justify-center shrink-0 mt-4">
-      <input
-        type="checkbox"
-        checked={isAgreementChecked}
-        onChange={handleAgreementCheckboxChange}
-        className="mr-2"
-      />
-      <span>Agree</span>
-    </div>
-  )
-)}
+      {currentPage === 0 ? (
+        <div className="flex items-center justify-center shrink-0 mt-4">
+          <input
+            type="checkbox"
+            checked={isWelcomeChecked}
+            onChange={handleWelcomeCheckboxChange}
+            className="mr-2"
+          />
+          <span>Don't show this again.</span>
+        </div>
+      ) : (
+        currentPageData.page_type === "agreement_page" && (
+          <div className="flex items-center justify-center shrink-0 mt-4">
+            <input
+              type="checkbox"
+              checked={isAgreementChecked}
+              onChange={handleAgreementCheckboxChange}
+              className="mr-2"
+            />
+            <span>Agree</span>
+          </div>
+        )
+      )}
 
       <div className="flex items-center justify-between mt-4 px-4">
         <Button
@@ -217,8 +216,9 @@ const renderContent = () => {
             className="min-w-40 flex justify-center items-center gap-2"
             onClick={handleNext}
             disabled={
-    currentPageData.page_type === "agreement_page" && !isAgreementChecked
-  }
+              currentPageData.page_type === "agreement_page" &&
+              !isAgreementChecked
+            }
           >
             Next
             <img src={RightArrowIcon} alt="Right Arrow" className="h-4" />
