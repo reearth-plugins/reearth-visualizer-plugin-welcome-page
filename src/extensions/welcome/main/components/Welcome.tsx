@@ -163,31 +163,31 @@ const Modal: React.FC<{ data: WidgetData }> = ({ data }) => {
       <div className="flex flex-grow h-0 p-4 justify-center">
         {renderContent()}
       </div>
-
-      {currentPage === 0 ? (
-        <div className="flex items-center justify-center shrink-0 mt-4">
-          <input
-            type="checkbox"
-            checked={isWelcomeChecked}
-            onChange={handleWelcomeCheckboxChange}
-            className="mr-2"
-          />
-          <span>Don't show this again.</span>
-        </div>
-      ) : (
-        currentPageData.page_type === "agreement_page" && (
+      <div>
+        {currentPage === 0 ? (
           <div className="flex items-center justify-center shrink-0 mt-4">
             <input
               type="checkbox"
-              checked={isAgreementChecked}
-              onChange={handleAgreementCheckboxChange}
+              checked={isWelcomeChecked}
+              onChange={handleWelcomeCheckboxChange}
               className="mr-2"
             />
-            <span>Agree</span>
+            <span>Don't show this again.</span>
           </div>
-        )
-      )}
-
+        ) : (
+          currentPageData.page_type === "agreement_page" && (
+            <div className="flex items-center justify-center shrink-0 mt-4">
+              <input
+                type="checkbox"
+                checked={isAgreementChecked}
+                onChange={handleAgreementCheckboxChange}
+                className="mr-2"
+              />
+              <span>Agree</span>
+            </div>
+          )
+        )}
+      </div>
       <div className="flex items-center justify-between mt-4 px-4">
         <Button
           onClick={handlePrev}
