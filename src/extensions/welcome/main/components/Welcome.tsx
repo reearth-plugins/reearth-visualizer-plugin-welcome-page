@@ -91,16 +91,20 @@ const Modal: React.FC<{ data: WidgetData }> = ({ data }) => {
         );
       case "tutorial_page":
         return (
-          <div className="relative flex flex-col w-full">
+          <div className="relative flex justify-center flex-grow w-full">
             {page.tutorial_page_image_url ? (
               <img
                 src={page.tutorial_page_image_url}
                 alt="Tutorial Image"
-                className="relative w-full h-full"
+                className="w-full object-cover"
               />
             ) : (
-              <div className="absolute w-full h-full">
-                <img src={TutorialImage} alt="default_tutorial_image" />
+              <div>
+                <img
+                  src={TutorialImage}
+                  alt="default_tutorial_image"
+                  className="w-full"
+                />
               </div>
             )}
           </div>
@@ -122,11 +126,13 @@ const Modal: React.FC<{ data: WidgetData }> = ({ data }) => {
       case "welcome_page":
       default:
         return (
-          <div className="flex flex-col w-full gap-2 bg-gray-200 p-4">
-            <div className="text-2xl shrink-0">{page.page_title}</div>
-            <p className="overflow-hidden shrink-0 whitespace-nowrap text-ellipsis">
-              {page.page_description}
-            </p>
+          <div className="flex flex-col w-full h-auto bg-gray-50">
+            <div className="flex flex-col gap-2 p-4 ">
+              <h1 className="text-2xl shrink-0">{page.page_title}</h1>
+              <p className="overflow-hidden shrink-0 whitespace-nowrap text-ellipsis">
+                {page.page_description}
+              </p>
+            </div>
             <div className="relative flex justify-center flex-grow w-full h-0">
               {renderMediaContent(
                 page.media_type,
@@ -145,16 +151,18 @@ const Modal: React.FC<{ data: WidgetData }> = ({ data }) => {
     videoUrl?: string
   ) => {
     if (type === "image_type" && imageUrl) {
-      return <img src={imageUrl} className="w-full h-full" />;
+      return <img src={imageUrl} className="w-full object-cover" />;
     } else if (type === "video_type" && videoUrl) {
-      return <video src={videoUrl} controls className="w-full h-full" />;
+      return <video src={videoUrl} controls className="w-full object-cover" />;
     } else {
       return <div className="absolute w-full h-full" />;
     }
   };
   return (
     <div className="absolute flex flex-col w-full h-full p-4 rounded-lg">
-      <div className="flex flex-grow h-0 p-4">{renderContent()}</div>
+      <div className="flex flex-grow h-0 p-4 justify-center">
+        {renderContent()}
+      </div>
 
       {currentPage === 0 ? (
         <div className="flex items-center justify-center shrink-0 mt-4">
