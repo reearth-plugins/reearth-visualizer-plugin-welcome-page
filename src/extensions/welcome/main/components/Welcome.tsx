@@ -85,7 +85,7 @@ const renderContent = () => {
     switch (page.page_type) {
       case "md_page":
         return (
-          <div className="markdown-body flex flex-col overflow-y-auto w-full p-4 bg-gray-200"
+          <div className="markdown-body flex-grow p-4 overflow-y-auto"
             >
             <ReactMarkdown>{page.md_content}</ReactMarkdown>
           </div>
@@ -110,7 +110,7 @@ const renderContent = () => {
         return (
           <div className="flex flex-col w-full">
             {page.agree_content ? (
-              <div className="markdown-body flex-grow p-4 overflow-y-auto bg-gray-200">
+              <div className="markdown-body flex-grow p-4 overflow-y-auto">
                 <ReactMarkdown>{page.agree_content}</ReactMarkdown>
               </div>
             ) : (
@@ -118,22 +118,12 @@ const renderContent = () => {
                 データを入力してからリロードしてページを表示してください。
               </div>
             )}
-
-            <div className="flex items-center justify-center shrink-0">
-              <input
-                type="checkbox"
-                checked={isAgreementChecked}
-                onChange={handleAgreementCheckboxChange}
-                className="mr-2"
-              />
-              <span>Agree</span>
-            </div>
           </div>
         );
       case "welcome_page":
       default:
         return (
-          <div className="flex flex-col w-full">
+          <div className="flex flex-col w-full gap-2 bg-gray-200 p-4">
             <div className="text-2xl shrink-0">{page.page_title}</div>
             <p className="overflow-hidden shrink-0 whitespace-nowrap text-ellipsis">
               {page.page_description}
@@ -160,24 +150,36 @@ const renderContent = () => {
     } else if (type === "video_type" && videoUrl) {
       return <video src={videoUrl} controls className="w-full h-full" />;
     } else {
-      return <div className="absolute w-full h-full bg-gray-200" />;
+      return <div className="absolute w-full h-full" />;
     }
   };
   return (
     <div className="absolute flex flex-col w-full h-full p-4 rounded-lg">
       <div className="flex flex-grow h-0 p-4">{renderContent()}</div>
 
-      {currentPage === 0 && (
-    <div className="flex items-center justify-center shrink-0">
+  {currentPage === 0 ? (
+  <div className="flex items-center justify-center shrink-0 mt-4">
+    <input
+      type="checkbox"
+      checked={isWelcomeChecked}
+      onChange={handleWelcomeCheckboxChange}
+      className="mr-2"
+    />
+    <span>Don't show this again.</span>
+  </div>
+) : (
+  currentPageData.page_type === "agreement_page" && (
+    <div className="flex items-center justify-center shrink-0 mt-4">
       <input
         type="checkbox"
-        checked={isWelcomeChecked}
-        onChange={handleWelcomeCheckboxChange}
+        checked={isAgreementChecked}
+        onChange={handleAgreementCheckboxChange}
         className="mr-2"
       />
-      <span>Don't show this again.</span>
+      <span>Agree</span>
     </div>
-  )}
+  )
+)}
 
       <div className="flex items-center justify-between mt-4 px-4">
         <Button
