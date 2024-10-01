@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
+import rehypeExternalLinks from "rehype-external-links";
 import "github-markdown-css/github-markdown-light.css";
 
 import LeftArrowIcon from "@/assets/leftArrow.svg";
@@ -86,7 +87,16 @@ const Modal: React.FC<{ data: WidgetData }> = ({ data }) => {
       case "md_page":
         return (
           <div className="markdown-body flex-grow p-4 overflow-y-auto">
-            <ReactMarkdown>{page.md_content}</ReactMarkdown>
+            <ReactMarkdown
+              rehypePlugins={[
+                [
+                  rehypeExternalLinks,
+                  { target: "_blank", rel: "noopener noreferrer" },
+                ],
+              ]}
+            >
+              {page.md_content}
+            </ReactMarkdown>
           </div>
         );
       case "tutorial_page":
