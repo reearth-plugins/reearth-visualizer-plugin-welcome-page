@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
-import 'github-markdown-css';
+import rehypeExternalLinks from "rehype-external-links";
+import "github-markdown-css/github-markdown-light.css";
 
 import LeftArrowIcon from "@/assets/leftArrow.svg";
 import RightArrowIcon from "@/assets/rightArrow.svg";
+import TutorialImage from "@/assets/tutorial_img.svg";
 import { Button } from "@/shared/components/ui/button";
 import { hexToHSL, postMsg } from "@/shared/utils";
 
@@ -29,13 +31,11 @@ export type WidgetData = {
 
 const Modal: React.FC<{ data: WidgetData }> = ({ data }) => {
   const pages = data.page_setting ?? [];
-  // console.log(data.appearance);
   const primaryColor = data.appearance?.primary_color ?? "#0085BE";
   const [currentPage, setCurrentPage] = useState(0);
   const [isWelcomeChecked, setIsWelcomeChecked] = useState(false);
   const [isAgreementChecked, setIsAgreementChecked] = useState(false);
 
-  // TODO: change the primary color
   useEffect(() => {
     if (primaryColor) {
       const hslColor = hexToHSL(primaryColor);
@@ -63,8 +63,6 @@ const Modal: React.FC<{ data: WidgetData }> = ({ data }) => {
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     setIsWelcomeChecked(e.target.checked);
-    // post to extension
-    postMsg("dontShowThisAgain", e.target.checked);
   };
 
   const handleAgreementCheckboxChange = (
@@ -74,77 +72,83 @@ const Modal: React.FC<{ data: WidgetData }> = ({ data }) => {
   };
 
   const handleStartToUse = () => {
+    postMsg("dontShowThisAgain", isWelcomeChecked);
     window.parent.postMessage({ action: "closeModal" }, "*");
   };
 
-const renderContent = () => {
-  if (!Array.isArray(pages) || pages.length === 0) {
-    return <p>No content available</p>;
-  }
-  const page = pages[currentPage];
-  if (!page) return <p>Loading...</p>;
+  const renderContent = () => {
+    if (!Array.isArray(pages) || pages.length === 0) {
+      return <p>No content available</p>;
+    }
+    const page = pages[currentPage];
+    if (!page) return <p>Loading...</p>;
 
     switch (page.page_type) {
       case "md_page":
         return (
-          <div className="markdown-body w-full h-full overflow-y-auto"
+          <div className="markdown-body flex-grow p-4 overflow-y-auto">
+            <ReactMarkdown
+              rehypePlugins={[
+                [
+                  rehypeExternalLinks,
+                  { target: "_blank", rel: "noopener noreferrer" },
+                ],
+              ]}
             >
-            <ReactMarkdown>{page.md_content}</ReactMarkdown>
+              {page.md_content}
+            </ReactMarkdown>
           </div>
         );
       case "tutorial_page":
         return (
-            <div className="relative flex flex-grow justify-center w-full my-4">
-              {page.tutorial_page_image_url ? (<img src={page.tutorial_page_image_url} alt="Tutorial Image" className="relative w-full h-full"/>):(<div className="absolute w-full h-full bg-gray-100" />)}
-            </div>
+          <div className="relative flex justify-center flex-grow w-full">
+            {page.tutorial_page_image_url ? (
+              <img
+                src={page.tutorial_page_image_url}
+                alt="Tutorial Image"
+                className="w-full object-cover"
+              />
+            ) : (
+              <div>
+                <img
+                  src={TutorialImage}
+                  alt="default_tutorial_image"
+                  className="w-full"
+                />
+              </div>
+            )}
+          </div>
         );
       case "agreement_page":
         return (
-          <div className="flex flex-col w-full gap-2">
+          <div className="flex flex-col w-full">
             {page.agree_content ? (
-              <div className="flex-grow p-4 overflow-y-auto bg-gray-300">
-                {page.agree_content}
+              <div className="markdown-body flex-grow p-4 overflow-y-auto">
+                <ReactMarkdown>{page.agree_content}</ReactMarkdown>
               </div>
             ) : (
-              <div className="flex items-center justify-center flex-grow p-4 text-xl bg-gray-300">
+              <div className="flex items-center justify-center flex-grow text-xl bg-gray-200">
                 データを入力してからリロードしてページを表示してください。
               </div>
             )}
-
-            <div className="flex items-center justify-center shrink-0">
-              <input
-                type="checkbox"
-                checked={isAgreementChecked}
-                onChange={handleAgreementCheckboxChange}
-                className="mr-2"
-              />
-              <span>Agree</span>
-            </div>
           </div>
         );
       case "welcome_page":
       default:
         return (
-          <div className="flex flex-col w-full gap-2">
-            <div className="text-2xl shrink-0">{page.page_title}</div>
-            <p className="overflow-hidden shrink-0 whitespace-nowrap text-ellipsis">
-              {page.page_description}
-            </p>
+          <div className="flex flex-col w-full h-auto bg-gray-50">
+            <div className="flex flex-col gap-2 p-4 ">
+              <h1 className="text-2xl shrink-0">{page.page_title}</h1>
+              <p className="overflow-hidden shrink-0 whitespace-nowrap text-ellipsis">
+                {page.page_description}
+              </p>
+            </div>
             <div className="relative flex justify-center flex-grow w-full h-0">
               {renderMediaContent(
                 page.media_type,
                 page.media_url,
                 page.video_url
               )}
-            </div>
-            <div className="flex items-center justify-center shrink-0">
-              <input
-                type="checkbox"
-                checked={isWelcomeChecked}
-                onChange={handleWelcomeCheckboxChange}
-                className="mr-2"
-              />
-              <span>Don't show this again.</span>
             </div>
           </div>
         );
@@ -154,21 +158,47 @@ const renderContent = () => {
   const renderMediaContent = (
     type?: string,
     imageUrl?: string,
-    videoUrl?: string,
+    videoUrl?: string
   ) => {
     if (type === "image_type" && imageUrl) {
-      return <img src={imageUrl} className="w-auto h-full" />;
+      return <img src={imageUrl} className="w-full object-cover" />;
     } else if (type === "video_type" && videoUrl) {
-      return <video src={videoUrl} controls className="w-auto h-full" />;
+      return <video src={videoUrl} controls className="w-full object-cover" />;
     } else {
-      return <div className="absolute w-full h-full bg-gray-300" />;
+      return <div className="absolute w-full h-full" />;
     }
   };
   return (
     <div className="absolute flex flex-col w-full h-full p-4 rounded-lg">
-      <div className="flex flex-grow h-0 p-4">{renderContent()}</div>
-
-      <div className="flex items-center justify-between mt-4">
+      <div className="flex flex-grow h-0 p-4 justify-center">
+        {renderContent()}
+      </div>
+      <div>
+        {currentPage === 0 ? (
+          <div className="flex items-center justify-center shrink-0 mt-4">
+            <input
+              type="checkbox"
+              checked={isWelcomeChecked}
+              onChange={handleWelcomeCheckboxChange}
+              className="mr-2"
+            />
+            <span>Don't show this again.</span>
+          </div>
+        ) : (
+          currentPageData.page_type === "agreement_page" && (
+            <div className="flex items-center justify-center shrink-0 mt-4">
+              <input
+                type="checkbox"
+                checked={isAgreementChecked}
+                onChange={handleAgreementCheckboxChange}
+                className="mr-2"
+              />
+              <span>Agree</span>
+            </div>
+          )
+        )}
+      </div>
+      <div className="flex items-center justify-between mt-4 px-4">
         <Button
           onClick={handlePrev}
           className={`${currentPage === 0 ? "opacity-0 pointer-events-none" : ""} min-w-40 flex justify-center items-center gap-2`}
@@ -203,6 +233,10 @@ const renderContent = () => {
           <Button
             className="min-w-40 flex justify-center items-center gap-2"
             onClick={handleNext}
+            disabled={
+              currentPageData.page_type === "agreement_page" &&
+              !isAgreementChecked
+            }
           >
             Next
             <img src={RightArrowIcon} alt="Right Arrow" className="h-4" />
