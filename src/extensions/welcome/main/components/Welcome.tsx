@@ -182,7 +182,7 @@ const Modal: React.FC<{ data: WidgetData }> = ({ data }) => {
               onChange={handleWelcomeCheckboxChange}
               className="mr-2"
             />
-            <span>Don't show this again.</span>
+            <span>次回から表示しない</span>
           </div>
         ) : (
           currentPageData.page_type === "agreement_page" && (
@@ -193,7 +193,7 @@ const Modal: React.FC<{ data: WidgetData }> = ({ data }) => {
                 onChange={handleAgreementCheckboxChange}
                 className="mr-2"
               />
-              <span>Agree</span>
+              <span>同意する</span>
             </div>
           )
         )}
