@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import ReactMarkdown from "react-markdown";
 import rehypeExternalLinks from "rehype-external-links";
 import "github-markdown-css/github-markdown-light.css";
@@ -29,12 +29,33 @@ export type WidgetData = {
   };
 };
 
+export async function generateContentId(content: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(content);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map((byte) => byte.toString(16).padStart(2, "0")).join("");
+}
+
 const Modal: React.FC<{ data: WidgetData }> = ({ data }) => {
-  const pages = data.page_setting ?? [];
+  const pages = useMemo(() => data.page_setting ?? [], [data.page_setting]);
   const primaryColor = data.appearance?.primary_color ?? "#0085BE";
   const [currentPage, setCurrentPage] = useState(0);
   const [isWelcomeChecked, setIsWelcomeChecked] = useState(false);
   const [isAgreementChecked, setIsAgreementChecked] = useState(false);
+  const [contentHash, setContentHash] = useState<string | null>(null);
+
+  useEffect(() => {
+    const agreementContent = pages.find(
+      (page) => page.page_type === "agreement_page"
+    )?.agree_content;
+    if (agreementContent) {
+      generateContentId(agreementContent).then((hash) => {
+        setContentHash(hash);
+        postMsg("checkAgreementVersion", hash);
+      });
+    }
+  }, [pages]);
 
   useEffect(() => {
     if (primaryColor) {
@@ -72,7 +93,11 @@ const Modal: React.FC<{ data: WidgetData }> = ({ data }) => {
   };
 
   const handleStartToUse = () => {
-    postMsg("dontShowThisAgain", isWelcomeChecked);
+    // Pass the hash along with the "Don't show this again" state
+    postMsg("dontShowThisAgain", {
+      hash: contentHash,
+      dontShow: isWelcomeChecked,
+    });
     window.parent.postMessage({ action: "closeModal" }, "*");
   };
 
