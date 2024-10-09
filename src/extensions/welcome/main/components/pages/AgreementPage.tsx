@@ -23,7 +23,7 @@ const AgreementPage: FC<{
     <div className="flex flex-col items-center w-full gap-4">
       <div className="flex flex-col flex-grow w-full">
         {agree_content ? (
-          <div className="flex-grow p-4 overflow-y-auto markdown-body">
+          <div className="flex-grow p-4 h-10 overflow-y-auto markdown-body">
             <ReactMarkdown>{agree_content}</ReactMarkdown>
           </div>
         ) : (
